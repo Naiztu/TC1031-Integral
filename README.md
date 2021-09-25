@@ -16,7 +16,10 @@ _Correspondiente al primer avance, se intenta implementar un sistema para que el
 
 _Cada uno tiene una importancia definida, al que se le tiene entregar más rápido es al auto, ya que es el que tiene menos tiempo, después sigue el del mostrador, para que el que menor prioridad en  el tiempo de entrega es el deliveri. Considerando esto, se necesita ordenar dependiendo la importancia del pedido para mandárselo a las pantallas de cocina_
 
+## Análisis de complejidad ⚙️ 
 
+*   ### Método Merge / sorts.h
+    El algoritmo empleado en esta función, se apoya con un vector auxiliar, y al pasar el resultado de uno a otro, crea una complejidad de O(n), mientras que en otra parte va haciendo operaciones donde los pasos se reducen a la mitad conforme se acomoda, lo que genera una complejidad d O(Log(n)). Juntando estos dos casos, identificamos que la complejidad es de O(n Log(n))
 
 ## **Correciones** 📌
 _Primer avance_
