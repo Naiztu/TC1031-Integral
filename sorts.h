@@ -17,21 +17,13 @@ class Sorts{
 		void copyArray(std::vector<T>&, std::vector<T>&, int, int);
 		void mergeArray(std::vector<T>&, std::vector<T>&, int, int, int);
 		void mergeSplit(std::vector<T>&, std::vector<T>&, int, int);
-		void swap(std::vector<T>&, int, int);
 	public:
 		Sorts(){}
-		void ordenaMerge(std::vector<T> v){
+		void ordenaMerge(std::vector<T> &v){
 			std::vector<T> aux(v.size());
 			mergeSplit(v,aux, 0, v.size() - 1);}
 		
 };
-
-template <class T>
-void Sorts<T>::swap(std::vector<T> &v, int i, int j) {
-	T aux = v[i];
-	v[i] = v[j];
-	v[j] = aux;
-}
 
 template <class T>
 void Sorts<T>::copyArray(std::vector<T> &A, std::vector<T> &B, int low, int high) {
@@ -46,7 +38,7 @@ void Sorts<T>::mergeArray(std::vector<T> &A, std::vector<T> &B, int low, int mid
 	k = low;
 
 	while (i <= mid &&j <= high) {
-		if (A[i].numPrioridad < A[j].numPrioridad) {
+		if (*A[i] < *A[j]) {
 			B[k] = A[i];
 			i++;
 		} else {
@@ -65,6 +57,8 @@ void Sorts<T>::mergeArray(std::vector<T> &A, std::vector<T> &B, int low, int mid
 		}
 	}
 }
+
+
 template <class T>
 void Sorts<T>::mergeSplit(std::vector<T> &A, std::vector<T> &B, int low, int high) {
 	int mid;

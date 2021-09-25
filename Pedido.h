@@ -21,10 +21,12 @@ class Pedido{
         int Id;
 		void prioridad();
 	public:
+        int numPrioridad; 
 		Pedido(){}
         Pedido(int, string, long);
         string printLista();
-        int numPrioridad;
+        bool operator< (Pedido &p){return (numPrioridad < p.numPrioridad);}
+        bool operator> (Pedido &p){return (numPrioridad > p.numPrioridad);}
 };
 
 Pedido::Pedido(int _Id, string _medio, long _total){
@@ -49,5 +51,4 @@ string Pedido::printLista(){
     aux << "\n" << Id << "\t" << medio << "\t" << total << "\t" << numPrioridad;
     return aux.str();
 }
-
 #endif
