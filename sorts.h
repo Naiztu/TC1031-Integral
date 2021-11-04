@@ -1,16 +1,22 @@
+//
+// sorts.h
+//
+//  Created on: 01/09/2021
+//      Author: Ángel Rico
+//
+
 #ifndef SORTS_H
 #define SORTS_H
 
 #include <vector>
 #include <iostream>
 
-//
-// sorts.h
-//
-//  Created on: 01/09/2021
-//      Author: Angel Rico
-//
 
+/**
+ * Sorts: Class for sorts.
+ * @file: Sorts.h
+ * @author: Ángel Rico
+ */
 template <class T>
 class Sorts{
 	private:
@@ -25,10 +31,28 @@ class Sorts{
 		
 };
 
+/**
+ * @brief Copy the array/vector of the original object.
+ * 
+ * @param A vector reference.
+ * @param B vector reference(auxiliary).
+ * @param low initial number of vector.
+ * @param high final number of vector.
+ */
 template <class T>
 void Sorts<T>::copyArray(std::vector<T> &A, std::vector<T> &B, int low, int high) {
 	for (int i = low; i <= high; i++) A[i] = B[i];
 }
+
+/**
+ * @brief algorithm merge for sort.
+ * 
+ * @param A vector reference.
+ * @param B vector reference(auxiliary).
+ * @param low initial number of vector.
+ * @param mid middle number of vector.
+ * @param high final number of vector.
+ */
 template <class T>
 void Sorts<T>::mergeArray(std::vector<T> &A, std::vector<T> &B, int low, int mid, int high) {
 	int i, j, k;
@@ -59,6 +83,14 @@ void Sorts<T>::mergeArray(std::vector<T> &A, std::vector<T> &B, int low, int mid
 }
 
 
+/**
+ * @brief algorithm merge for sort (base).
+ * 
+ * @param A vector reference.
+ * @param B vector reference(auxiliary).
+ * @param low initial number of vector.
+ * @param high final number of vector.
+ */
 template <class T>
 void Sorts<T>::mergeSplit(std::vector<T> &A, std::vector<T> &B, int low, int high) {
 	int mid;
