@@ -41,7 +41,7 @@ _En caso que se necesite recomendar una hamburguesa, cada una tiene un numero de
 ## **Correciones** 📌
  _Primer avance: Completo._
 _Segundo avance: Se agrego la estructura lineal._
- _Tercer avance: Completo._
+ _Tercer avance: Se agrego la estructura de arbol Splay._
 
 ## **Lenguaje** 👅
 *  *C++*

@@ -30,6 +30,8 @@ class Pedido{
         int numPrioridad; 
 		Pedido(){}
         Pedido(int, string, long);
+        string getTipo(){ return medio;}
+        long getTotal(){ return total;} 
         string printLista();
         bool operator< (Pedido &p){return (numPrioridad < p.numPrioridad);}
         bool operator> (Pedido &p){return (numPrioridad > p.numPrioridad);}

@@ -16,6 +16,7 @@
 #include <vector>
 #include <stack>
 #include <list>
+#include <array>
 #include <fstream>
 #include <sstream>
 using namespace std;
@@ -27,22 +28,28 @@ using namespace std;
  */
 class App{
     private:
+		int numPedidos = 0, numProductos = 0;
+
 		void loadVectorPedido(vector<Pedido*>&);
-		void loadListProducto(list<Product*>&);
+		void loadListProducto(vector<Product*>&);
 		void loadTree(SplayTree<Product>&);
 
 		stack<Pedido*> pedidos; 
-		list<Product*> productos;
+		vector<Product*> productos;
 		SplayTree<Product> recomendaciones;
 
 		vector<Pedido*> stackToVector(stack<Pedido*>);
-		stack<Pedido*>  vectorToStack(vector<Pedido*>);
+		stack<Pedido*> vectorToStack(vector<Pedido*>);
+		void ordenaStack(stack<Pedido*>&, vector<Pedido*>);
 
         int menuMain();
+		int menuPedido();
 		void opcion1();
-		void listaProducto();
+		void opcion2();
 		void opcion3();
+		void listaProducto();
 		bool validaOpcion(int op,int inf, int sup);
+		void loadFileNew();
     public:
         App(){}
         ~App();
@@ -55,21 +62,20 @@ class App{
  */
 App::~App(){
 	while (!pedidos.empty()) {
-        pedidos.top()->printLista();
+        Pedido *aux = pedidos.top();
         pedidos.pop();
+		delete aux;
     }
+	for (auto item : productos){
+		delete item;
+	}
 	
 }
 
-
 void App::start(){
-    Sorts<Pedido*> sorts;
 	vector<Pedido*> auxvector;
-
 	loadVectorPedido(auxvector);
-	sorts.ordenaMerge(auxvector);
-
-	pedidos = vectorToStack(auxvector);
+	ordenaStack(pedidos, auxvector);
 	
 	loadListProducto(productos);
 	loadTree(recomendaciones);
@@ -79,21 +85,221 @@ void App::start(){
 		op = menuMain();
 		switch (op){
 		case 1:
+			/*Caso de prueba en metodo opcion 1*/
 			opcion1();
 			break;
 		case 2:
-			listaProducto();
+			/*
+			Caso de prueba:
+			*******************************************
+							MENU:
+			*******************************************
+			1. Lista pedidos
+			2. Lista productos
+			3. Sugerencia del dia
+			4. Salir
+			*******************************************
+
+			Opci├│n: 2
+
+					ID      Nombre          Precio
+			1.-  	0  		bigMac          65.5
+			2.-  	1  		McPollo         55
+			3.-  	2  		McDoble         93.5
+			4.-  	3 		Deluxe          130.5
+			5.-  	4  		HambQueso       50.5
+			6.-  	5  		CBO             114.5
+			7.-  	6  		Crispy          78.5
+			8.-  	7  		McNifica        68.5
+			9.-  	8  		CuartoDLibra    76
+			*/
+			opcion2();
 			break;
 		case 3:
+			/*
+			Caso de prueba:
+			*******************************************
+							MENU:
+			*******************************************
+			1. Lista pedidos
+			2. Lista productos
+			3. Sugerencia del dia
+			4. Salir
+			*******************************************
+
+			Opci├│n: 3
+
+					ID      Nombre          Precio
+			1.-  	0  		bigMac          65.5
+			2.-  	1  		McPollo         55
+			3.-  	2  		McDoble         93.5
+			4.-  	3 		Deluxe          130.5
+			5.-  	4  		HambQueso       50.5
+			6.-  	5  		CBO             114.5
+			7.-  	6  		Crispy          78.5
+			8.-  	7  		McNifica        68.5
+			9.-  	8  		CuartoDLibra    76
+
+			Ultimo pedido:5
+
+			================================
+			Ultimo Pedido:HambQueso
+			sugerencias del dia:
+			->Deluxe
+			->McNifica
+			->CBO
+			->CuartoDLibra
+			->McDoble
+			->McPollo
+			->bigMac
+			->Crispy
+			================================
+			*/
 			opcion3();
 			break;
 		default:
+			loadFileNew();
 			cout << "\n              ¡¡¡ADIOS!!\n";
 			break;
 		}
 
 	} while(op != 4);
 
+}
+
+void App::opcion1(){
+	int op = 0;
+	bool ban = true;
+	long total;
+	list<string> lista = {"Deli", "Most", "Auto"};
+	string tipo;
+	do{
+		cout << "\nID\tMedio\tTotal";
+		vector<Pedido*> aux = stackToVector(pedidos);
+		for (auto item : aux) 
+			cout << item->printLista();
+		op = menuPedido();
+		switch (op){
+		case 1:
+			/*
+			Caso de prueba:
+			*******************************************
+							MENU:
+			*******************************************
+			1. Lista pedidos
+			2. Lista productos
+			3. Sugerencia del dia
+			4. Salir
+			*******************************************
+
+			Opci├│n: 1 
+
+			ID      Medio   Total
+			13      Auto    586
+			10      Auto    987
+			7       Auto    325
+			4       Auto    65
+			1       Auto    352
+			14      Most    98
+			11      Most    456
+			8       Most    67
+			5       Most    234
+			2       Most    46
+			12      Deli    576
+			9       Deli    86
+			6       Deli    7523
+			3       Deli    1254
+			0       Deli    304
+			*******************************************
+			1. Agregar Pedido
+			2. Eliminar Pedido
+			3. Salir
+			*******************************************
+
+			Opci├│n: 1
+			Tipo: Most
+			Total: 324
+
+
+			ID      Medio   Total
+			1       Auto    352
+			4       Auto    65
+			7       Auto    325
+			10      Auto    987
+			13      Auto    586
+			2       Most    46
+			5       Most    234
+			8       Most    67
+			11      Most    456
+			14      Most    98
+			15      Most    324 <----- Agregado
+			0       Deli    304
+			3       Deli    1254
+			6       Deli    7523
+			9       Deli    86
+			12      Deli    576
+			*/
+			do{
+				cout << "Tipo: "; cin >> tipo;
+				for (auto const&item: lista)
+					if(item == tipo) ban = false;
+			} while (ban);
+			cout << "Total: "; cin >> total;
+			pedidos.push(new Pedido(numPedidos, tipo, total));
+			ordenaStack(pedidos, stackToVector(pedidos));
+			numPedidos++;
+			cout << "\n";
+			break;
+		case 2:
+			/*
+			Caso de prueba:
+			*******************************************
+			1. Agregar Pedido
+			2. Eliminar Pedido
+			3. Salir
+			*******************************************
+
+			Opci├│n: 2
+
+			Pedido entregado:
+			1       Auto    352		<--- Eliminado 
+
+			ID      Medio   Total
+			4       Auto    65
+			7       Auto    325
+			10      Auto    987
+			13      Auto    586
+			2       Most    46
+			5       Most    234
+			8       Most    67
+			11      Most    456
+			14      Most    98
+			15      Most    324
+			0       Deli    304
+			3       Deli    1254
+			6       Deli    7523
+			9       Deli    86
+			12      Deli    576
+			*/
+			if (pedidos.size()!=0){
+				cout << "\nPedido entregado: " << pedidos.top()->printLista() <<"\n";
+				pedidos.pop();
+			} else cout << "\n¡¡¡Ya no hay pedidos!!! \n" ;
+			
+			break;
+		default:
+			cout << "\n";
+			break;
+		}
+
+	} while(op != 3);
+}
+
+void App::ordenaStack(stack<Pedido*> &s, vector<Pedido*> p){
+	Sorts<Pedido*> sorts;
+	
+	sorts.ordenaMerge(p);
+	s = vectorToStack(p);
 }
 
 stack<Pedido*> App::vectorToStack(vector<Pedido*> v){
@@ -111,7 +317,6 @@ vector<Pedido*> App::stackToVector(stack<Pedido*> s){
 	return v;
 }
 
-
 int App::menuMain(){
 	bool ban = true;
     int op=0; 
@@ -121,13 +326,31 @@ int App::menuMain(){
         cout << "\n                MENU:\n";
         cout << "*******************************************\n";
         cout << "1. Lista pedidos\n";
-        cout << "2. Generar recomendacion \n";
-		cout << "3. Lista productos \n";
+        cout << "2. Lista productos \n";
+		cout << "3. Sugerencia del dia\n";
         cout << "4. Salir \n";
         cout << "*******************************************\n";
         
         cout << "\nOpción: "; cin>>op;
         ban = validaOpcion(op,1,4);
+    } 
+
+    return op;
+}
+
+int App::menuPedido(){
+	bool ban = true;
+    int op=0; 
+
+    while (ban){
+        cout << "\n*******************************************\n";
+        cout << "1. Agregar Pedido\n";
+        cout << "2. Eliminar Pedido \n";
+        cout << "3. Salir \n";
+        cout << "*******************************************\n";
+        
+        cout << "\nOpción: "; cin>>op;
+        ban = validaOpcion(op,1,3);
     } 
 
     return op;
@@ -143,7 +366,6 @@ bool App::validaOpcion(int op,int inf, int sup){
     return ban;
 }
 
-
 /**
  * @brief load information to vector specific.
  */
@@ -154,74 +376,84 @@ void App::loadVectorPedido(vector<Pedido*> &v){
 	file.open("examplesPedidos.csv");
 	getline(file, line);
 
-	int id;
 	string medio;
 	long total;
 
 	while (getline(file, line)){
 		stringstream ss(line);
-		ss >> id >> medio >> total;
-		v.push_back(new Pedido(id, medio, total));
+		ss >> medio >> total;
+		v.push_back(new Pedido(numPedidos, medio, total));
+		numPedidos++;
 	}
+	file.close();
+	remove("examplesPedidos.csv");
 }
 
-void App::loadListProducto(list<Product*> &l){
+void App::loadListProducto(vector<Product*> &l){
 	string line;
 	ifstream file;
 
 	file.open("examplesProducts.csv");
 	getline(file, line);
 
-	string id, name;
+	string name;
     int numConection;
     float price;
 
 	while (getline(file, line)){
 		stringstream ss(line);
-		ss >> id >> name >> numConection >> price;
-		l.push_back(new Product(id, name, numConection, price));
+		ss >> name >> numConection >> price;
+		l.push_back(new Product(to_string(numProductos), name, numConection, price));
+		numProductos++;
 	}
 }
 
 void App::loadTree(SplayTree<Product> &t){
-	list<Product*>::iterator it;
-	for(it = productos.begin(); it != productos.end(); ++it)	t.add(**it);
+	vector<Product*>::iterator it;
+	vector<Product*> paux(productos);
+
+	Sorts<Product*> s;
+
+	s.ordenaMerge(paux);
+
+	for(it = paux.begin(); it != paux.end(); ++it)	t.add(**it);
 }
 
-void App::opcion1(){
-	cout << "\nID\tMedio\tTotal";
-	vector<Pedido*> aux = stackToVector(pedidos);
-	while (!pedidos.empty()) {
-		cout << pedidos.top()->printLista();
-		pedidos.pop();
-	}
-	pedidos = vectorToStack(aux);
-	cout << "\n";
-}
+
 
 void App::listaProducto(){
 	cout << "\n\tID\tNombre\t\tPrecio";
-	list<Product*>::iterator it;
+	vector<Product*>::iterator it;
 	int i=1;
 	for(it = productos.begin(); it != productos.end(); ++it){
-		cout << "\n" << i << ".-  " << (*it)->printLista();
+		cout << "\n" << i << ".-\t" << (*it)->printLista();
 		i++;
-	}
-		
+	}		
 }
 
+void App::opcion2(){
+	listaProducto();
+}
 
 void App::opcion3(){
 	listaProducto();
-	int i, index = 1;
-	cout << "\n\nNumero:"; cin >> i;
-	list<Product*>::iterator it = productos.begin();
-	while (i != index){
-		++it;
-		index++;
-	}
-	recomendaciones.find(**it);
+	int i;
+	bool ban = true;
+
+    while (ban){
+        cout << "\n\nUltimo pedido:"; cin >> i;
+        ban = validaOpcion(i,1,productos.size());
+    } 
+	recomendaciones.find(*productos[i-1]);
 	cout << recomendaciones.print_tree();
+}
+
+void App::loadFileNew(){
+	fstream CreateFile("examplesPedidos.csv", ios::out);
+	CreateFile << "typeOfService\tbill"<<endl;
+	for (auto item:stackToVector(pedidos)){
+		CreateFile << item->getTipo()<<"\t"<<item->getTotal()<< endl;
+	}
 }
 
 #endif

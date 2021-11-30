@@ -15,6 +15,7 @@ class Product{
     public:
         Product(string, string, int, float);
         string printLista();
+        void setNumConexion(int n){ numConection = n;}
         string getName() const { return name;}
         bool  operator< (Product &p){ return (numConection < p.numConection);  }
         bool  operator> (Product &p){ return (numConection > p.numConection);  }

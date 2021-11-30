@@ -1,11 +1,10 @@
-id  name    numConection    price
-01  bigMac  100 65.5
-02  McPollo 96  55
-03  McDoble 102 93.5
-04  Deluxe  103 130.5
-05  HambQueso 95 50.5 
-06  CBO 104 114.5
-07  Crispy  97  78.5
-08  McNifica    101 68.5   
-09  LechugaTomate   99  60
-10  CuartoDLibra    98  76
+name    numConection    price
+bigMac  5 65.5
+McPollo 2  55
+McDoble 7 93.5
+Deluxe  8 130.5
+HambQueso 1 50.5 
+CBO 9 114.5
+Crispy  3  78.5
+McNifica    6   68.5   
+CuartoDLibra    4   76
