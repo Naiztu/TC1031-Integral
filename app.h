@@ -461,7 +461,7 @@ void App::loadFileNew(){
 
 void App::casosDePrueba(){
 	cout << "\n*******************************************";
-    cout << "\n                MENU:\n";
+    cout << "\n                Casos de prueba:\n";
     cout << "*******************************************\n\n";
 
 	listaTipos.push_back("Deli");
@@ -497,20 +497,5 @@ void App::casosDePrueba(){
 	cout << "\n" <<"4.- Ultimos pedidos esperada: " << aux3 << "\n programa: " <<  recomendaciones.print_tree() << "\n";
 	cout <<	(!aux3.compare( recomendaciones.print_tree()) ? "success\n" : "fail\n");
 }
-
-/*
-================================
-Ultimo Pedido: bigMac
-Sugerencias del dia:
-->CuartoDLibra
-->Deluxe
-->McNifica
-->CBO
-->McDoble
-->Crispy
-->McPollo
-->HambQueso
-================================
-*/
 
 #endif
