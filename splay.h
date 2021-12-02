@@ -164,8 +164,8 @@ Node<T>* Node<T>::splay(Node<T> *rt, Node<T> *x){
 }
 template <class T>
 void Node<T>::print_tree(std::stringstream &aux) const {
-	if (left != 0) aux << "\n ->" << left->value.getName();
-	if (right != 0) aux << "\n ->" << right->value.getName();
+	if (left != 0) aux << "\n->" << left->value.getName();
+	if (right != 0) aux << "\n->" << right->value.getName();
     if (right != 0) right->print_tree(aux);
 	if (left != 0)  left->print_tree(aux);
 }
@@ -252,14 +252,14 @@ template <class T>
 std::string SplayTree<T>::print_tree() const {
     std::stringstream aux;
 
-    aux << "\n ================================ ";
+    aux << "\n================================";
         
     if (!empty()){
-        aux << "\n Ultimo Pedido:" << root->value.getName();
-        aux << "\n sugerencias del dia: " ;
+        aux << "\nUltimo Pedido: " << root->value.getName();
+        aux << "\nSugerencias del dia:" ;
         root->print_tree(aux);
     }   
-    aux << "\n ================================ \n";
+    aux << "\n================================\n";
     return aux.str();
 }
 

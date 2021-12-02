@@ -37,6 +37,7 @@ class App{
 		stack<Pedido*> pedidos; 
 		vector<Product*> productos;
 		SplayTree<Product> recomendaciones;
+		list<string> listaTipos;
 
 		vector<Pedido*> stackToVector(stack<Pedido*>);
 		stack<Pedido*> vectorToStack(vector<Pedido*>);
@@ -47,9 +48,11 @@ class App{
 		void opcion1();
 		void opcion2();
 		void opcion3();
-		void listaProducto();
+		string listaProducto();
 		bool validaOpcion(int op,int inf, int sup);
 		void loadFileNew();
+
+		void casosDePrueba();
     public:
         App(){}
         ~App();
@@ -79,7 +82,7 @@ void App::start(){
 	
 	loadListProducto(productos);
 	loadTree(recomendaciones);
-
+	casosDePrueba();
 	int op = 0;
 	do{
 		op = menuMain();
@@ -171,7 +174,6 @@ void App::opcion1(){
 	int op = 0;
 	bool ban = true;
 	long total;
-	list<string> lista = {"Deli", "Most", "Auto"};
 	string tipo;
 	do{
 		cout << "\nID\tMedio\tTotal";
@@ -241,7 +243,7 @@ void App::opcion1(){
 			*/
 			do{
 				cout << "Tipo: "; cin >> tipo;
-				for (auto const&item: lista)
+				for (auto const&item: listaTipos)
 					if(item == tipo) ban = false;
 			} while (ban);
 			cout << "Total: "; cin >> total;
@@ -291,7 +293,6 @@ void App::opcion1(){
 			cout << "\n";
 			break;
 		}
-
 	} while(op != 3);
 }
 
@@ -421,22 +422,24 @@ void App::loadTree(SplayTree<Product> &t){
 
 
 
-void App::listaProducto(){
-	cout << "\n\tID\tNombre\t\tPrecio";
+string App::listaProducto(){
+	stringstream aux;
+	aux << "\n\tID\tNombre\t\tPrecio";
 	vector<Product*>::iterator it;
 	int i=1;
 	for(it = productos.begin(); it != productos.end(); ++it){
-		cout << "\n" << i << ".-\t" << (*it)->printLista();
+		aux << "\n" << i << ".-\t" << (*it)->printLista();
 		i++;
-	}		
+	}	
+	return aux.str();	
 }
 
 void App::opcion2(){
-	listaProducto();
+	cout << listaProducto();
 }
 
 void App::opcion3(){
-	listaProducto();
+	cout << listaProducto();
 	int i;
 	bool ban = true;
 
@@ -455,5 +458,59 @@ void App::loadFileNew(){
 		CreateFile << item->getTipo()<<"\t"<<item->getTotal()<< endl;
 	}
 }
+
+void App::casosDePrueba(){
+	cout << "\n*******************************************";
+    cout << "\n                MENU:\n";
+    cout << "*******************************************\n\n";
+
+	listaTipos.push_back("Deli");
+	listaTipos.push_back("Most");
+	listaTipos.push_back("Auto");
+	string aux0 = "Deli\tMost\tAuto\t";
+	stringstream aux00;
+	for (auto item: listaTipos) aux00 << item << "\t";
+	cout << "\n" <<"2.- Lista Tipos esperada: " << aux0 << "\n programa: " << aux00.str() << "\n";
+	cout <<	(!aux0.compare(aux00.str()) ? "success\n" : "fail\n");
+
+	//Se funciona en la primera corrida
+	string aux1 = "\n\tID\tNombre\t\tPrecio\n1.-\t0\tbigMac\t\t65.5\n2.-\t1\tMcPollo\t\t55\n3.-\t2\tMcDoble\t\t93.5\n4.-\t3\tDeluxe\t\t130.5\n5.-\t4\tHambQueso\t50.5\n6.-\t5\tCBO\t\t114.5\n7.-\t6\tCrispy\t\t78.5\n8.-\t7\tMcNifica\t68.5\n9.-\t8\tCuartoDLibra\t76";
+	cout << "\n" <<"2.- Lista Pedidos esperada: " << aux1 << "\n programa " << listaProducto() << "\n";
+	cout <<	(!aux1.compare(listaProducto()) ? "success\n" : "fail\n");
+	
+	vector<Product*>::iterator it;
+	vector<Product*> paux(productos);
+	Sorts<Product*> s;
+	s.ordenaMerge(paux);
+
+	string aux2 = "HambQueso\tMcPollo\tCrispy\tCuartoDLibra\tbigMac\tMcNifica\tMcDoble\tDeluxe\tCBO\t";
+	stringstream aux22;
+	for (auto item: paux){
+		aux22 << item->getName()<<"\t";
+	}
+	cout << "\n" <<"3.- Lista Productos ordenadas esperada: " << aux2 << "\n programa: " << aux22.str() << "\n";
+	cout <<	(!aux2.compare(aux22.str()) ? "success\n" : "fail\n");
+
+	//Solo funciona en la primera corridada
+	string aux3="\n================================\nUltimo Pedido: bigMac\nSugerencias del dia:\n->CuartoDLibra\n->Deluxe\n->McNifica\n->CBO\n->McDoble\n->Crispy\n->McPollo\n->HambQueso\n================================\n";
+	recomendaciones.find(*productos[0]);
+	cout << "\n" <<"4.- Ultimos pedidos esperada: " << aux3 << "\n programa: " <<  recomendaciones.print_tree() << "\n";
+	cout <<	(!aux3.compare( recomendaciones.print_tree()) ? "success\n" : "fail\n");
+}
+
+/*
+================================
+Ultimo Pedido: bigMac
+Sugerencias del dia:
+->CuartoDLibra
+->Deluxe
+->McNifica
+->CBO
+->McDoble
+->Crispy
+->McPollo
+->HambQueso
+================================
+*/
 
 #endif
