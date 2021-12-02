@@ -2,7 +2,7 @@
 #define SPLAYTREE_H
 
 #include <string>
-#include <sStream>
+#include <sstream>
 #include <iostream>
 
 template <class T> class SplayTree;
